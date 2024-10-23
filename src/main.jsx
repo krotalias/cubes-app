@@ -7,7 +7,7 @@
  * @since 10/10/2024
  * @author Paulo Roma.
  * @see <a href="../src/main.jsx">source</a>
- * @see <a href="https://rpe-gold.vercel.app/">link</a>
+ * @see <a href="https://cubes-app.vercel.app/">link</a>
  * @see {@link external:react-dom/client.createRoot createRoot}
  * @see {@link external:react-three/fiber R3F}
  */

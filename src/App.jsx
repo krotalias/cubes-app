@@ -40,7 +40,7 @@
  * @author Paulo Roma
  * @since 10/10/2024
  * @see <a href="../src/App.jsx">source</a>
- * @see <a href="http://localhost:5173/">link</a>
+ * @see <a href="https://cubes-app.vercel.app/">link</a>
  * @see {@link https://codesandbox.io/p/sandbox/sfypdx original code}
  * @see <img src="../cubes.png" width="340">
  */

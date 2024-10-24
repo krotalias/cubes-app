@@ -6,13 +6,35 @@
  * with {@link https://www.digitalocean.com/community/tutorials/how-to-set-up-a-react-project-with-vite Vite}.</p>
  * When the mouse is hovered onto a cube, its color changes from orange to hotpink.<br>
  * When a cube is clicked, its scale is toggled from 1 to 1.5 and its color changes.
+ * The process of selecting colors is more complicated than it seems, because
+ * {@link external:react.useEffect React useState} is asynchronous!
  *
  * <p>We label the cubes and their colors by calling Text,
- * with Hi-quality rendering w/ signed distance fields (SDF) and antialiasing, using troika-3d-text.<br>
+ * with Hi-quality rendering w/ signed distance fields (SDF) and antialiasing,
+ * using {@link https://protectwise.github.io/troika/troika-three-text/ troika-3d-text}.
  * It is also possible to use Text3D, with {@link https://hyper2.com.br/js/fonts/ type face} fonts.</p>
  *
  * <p>Finally, {@link https://codesandbox.io/p/sandbox/np6s28 decals}
- * are applied to each face of the cubes.</p>
+ * are applied to each face of the cubes.
+ *
+ * Decals are objects that interfere in the "pick" with the mouse process
+ * and to avoid mistakes,
+ * we call {@link https://r3f.docs.pmnd.rs/api/events event.stopPropagation()}
+ * to get only the first intersection when a ray is cast. Furthermore, if
+ * {@link http://drei.docs.pmnd.rs/abstractions/decal#decal no material
+ * is specified}, a transparent meshBasicMaterial
+ * with a polygonOffsetFactor of -10 will be created,
+ * producing a weird effect when the cubes overlap.</p>
+ *
+ * <figure>
+ *  <img src="../decals.png" width="256">
+ *  <figcaption style="font-size: 100%">Overlap with transparent meshBasicMaterial</figcaption>
+ * </figure>
+ *
+ * <figure>
+ *  <img src="../cubes2.png" width="256">
+ *  <figcaption style="font-size: 100%">meshBasicMaterial specified</figcaption>
+ * </figure>
  *
  <p>Usage: </p>
  * <ul>
@@ -58,7 +80,6 @@ import {
     Decal,
 } from "@react-three/drei";
 import "./index.css";
-import { mx_bilerp_0 } from "three/src/nodes/materialx/lib/mx_noise.js";
 
 /**
  * Three.js module.
@@ -170,7 +191,7 @@ function Box({ colorState, position, name } = props) {
         "/three.png",
     ]);
 
-    const nextColor = (c) => (c >= ncolors ? 0 : (+c + 1) % ncolors);
+    const nextColor = (c) => (c >= ncolors ? 0 : (1 + c) % ncolors);
 
     // Subscribe this component to the render-loop, to rotate the mesh in each frame.
     useFrame((state, delta) => (meshRef.current.rotation.x += delta));
@@ -190,7 +211,7 @@ function Box({ colorState, position, name } = props) {
      * which will be used in the next draw.</p>
      *
      * @function useEffect
-     * @global
+     * @memberof external:react
      *
      * @see {@link https://making.close.com/posts/state-management-with-async-functions The Pitfalls of useState with Asynchronous Functions in React}
      * @see {@link https://dev.to/shareef/react-usestate-hook-is-asynchronous-1hia React useState hook is asynchronous!}
@@ -201,7 +222,7 @@ function Box({ colorState, position, name } = props) {
         root.style.setProperty("--txtColor", colors[cor]);
         output.innerHTML = `Clicked (useEffect): ${clicked} <br /> name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`;
         console.log(
-            `Clicked (useEffect): ${clicked}, name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`
+            `Clicked (useEffect): ${clicked}, name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`,
         );
     }, [clicked]);
 

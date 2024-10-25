@@ -14,17 +14,23 @@
  * using {@link https://protectwise.github.io/troika/troika-three-text/ troika-3d-text}.
  * It is also possible to use Text3D, with {@link https://hyper2.com.br/js/fonts/ type face} fonts.</p>
  *
+ * <figure>
+ *  <img src="../Text3D.png" width="256">
+ *  <figcaption style="font-size: 100%">Text3D with bevel</figcaption>
+ * </figure>
+ *
  * <p>Finally, {@link https://codesandbox.io/p/sandbox/np6s28 decals}
  * are applied to each face of the cubes.
  *
- * Decals are objects that interfere in the "pick" with the mouse process
+ * Decals are objects that interfere with the
+ * "{@link https://antongerdelan.net/opengl/raycasting.html mouse picking}"
  * and to avoid mistakes,
  * we call {@link https://r3f.docs.pmnd.rs/api/events event.stopPropagation()}
- * to get only the first intersection when a ray is cast. Furthermore, if
+ * to get only the first intersection when a pick ray is cast. Furthermore, if
  * {@link http://drei.docs.pmnd.rs/abstractions/decal#decal no material
  * is specified}, a transparent meshBasicMaterial
  * with a polygonOffsetFactor of -10 will be created,
- * producing a weird effect when the cubes overlap.</p>
+ * producing an awkward effect when the cubes overlap.</p>
  *
  * <figure>
  *  <img src="../decals.png" width="256">
@@ -175,15 +181,28 @@ const ncolors = Object.keys(colors).length - 2;
  * @returns {ThreeElements} view as regular three.js elements expressed in JSX.
  */
 function Box({ colorState, position, name } = props) {
-    // This reference will give us direct access to the mesh
+    /**
+     * This reference will give us direct access to a Box mesh.
+     * @type {React.MutableRefObjec}
+     * @global
+     */
     const meshRef = useRef();
 
     const [color, setColor] = colorState;
 
-    // Set up state for the clicked and active state
+    /**
+     * Set up the clicked and active states.
+     * States are pairs with an stateful value,
+     * and a function to update it.
+     */
     const [clicked, setClick] = useState(false);
     const [active, setActive] = useState(false);
     const root = document.querySelector(":root");
+    /**
+     * Element identified by "#output".
+     * @type {Element}
+     * @global
+     */
     const output = document.querySelector("#output");
     const [pmndrsImg, reactImg, threeImg] = useTexture([
         "/pmndrs.png",
@@ -191,10 +210,31 @@ function Box({ colorState, position, name } = props) {
         "/three.png",
     ]);
 
+    /**
+     * Returns the next color index (key) in the range [0, {@link ncolors}] from the {@link colors color Object}.
+     * @global
+     * @param {Number} c color index.
+     * @returns {Number} next color index.
+     */
     const nextColor = (c) => (c >= ncolors ? 0 : (1 + c) % ncolors);
 
     // Subscribe this component to the render-loop, to rotate the mesh in each frame.
     useFrame((state, delta) => (meshRef.current.rotation.x += delta));
+
+    /**
+     * Sets the {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+     * and {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style style.color}
+     * properties of the Element {@link output}.
+     * @global
+     * @param {String} txt output setter id.
+     * @param {Number} cor color index.
+     */
+    const setOutput = (txt, cor) => {
+        if (output) {
+            output.style.color = colors[cor];
+            output.innerHTML = `${txt}<br /> name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`;
+        }
+    };
 
     /**
      * <p>React {@link https://react.dev/reference/react/useState useState}
@@ -219,10 +259,9 @@ function Box({ colorState, position, name } = props) {
     useEffect(() => {
         const cor = color === false ? ncolors : nextColor(color);
         setColor(cor);
-        root.style.setProperty("--txtColor", colors[cor]);
-        output.innerHTML = `Clicked (useEffect): ${clicked} <br /> name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`;
+        setOutput("useEffect", cor);
         console.log(
-            `Clicked (useEffect): ${clicked}, name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`,
+            `useEffect: clicked ${clicked}, name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`,
         );
     }, [clicked]);
 
@@ -232,6 +271,14 @@ function Box({ colorState, position, name } = props) {
             name={name}
             ref={meshRef}
             scale={active ? 1.5 : 1}
+            /**
+             * Gets the picked (clicked) object (Box) and sets its color.
+             * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+             * property of the Element {@link output} is also updated.
+             * @param {PointerEvent} event pointer ThreeEvent.
+             * @event click - fires after both the mousedown and mouseup events have fired in that order.
+             * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event Element: click event}
+             */
             onClick={(event) => {
                 const cubeName = event.eventObject.name;
                 event.stopPropagation();
@@ -243,23 +290,32 @@ function Box({ colorState, position, name } = props) {
                     // functional update
                     setColor((prevColor) => nextColor(prevColor));
                     const cor = nextColor(color);
-                    root.style.setProperty("--txtColor", colors[cor]);
-                    output.innerHTML = `Clicked (functional update): ${true} <br\ > name: ${cubeName}, color: ${cor} → ${colors[cor]}`;
+                    setOutput("functional update", cor);
                 }
             }}
+            /**
+             * Gets the hovered object (Box) and sets its color.
+             * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+             * property of the Element {@link output} is also updated.
+             * @param {PointerEvent} event pointer ThreeEvent.
+             * @event pointover - fired when a pointing device is moved into an element's hit test boundaries.
+             * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerover_event Element: pointerover event}
+             */
             onPointerOver={(event) => {
-                const cubeName = event.eventObject.name;
                 setColor(ncolors + 1);
-                root.style.setProperty("--txtColor", colors[ncolors + 1]);
-                output.innerHTML = `Hovered: ${true} <br \> name: ${cubeName}, color: ${
-                    ncolors + 1
-                } → ${colors[ncolors + 1]}`;
+                setOutput("Hovered", ncolors + 1);
             }}
+            /**
+             * Gets the unhovered object (Box) and sets its color.
+             * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+             * property of the Element {@link output} is also updated.
+             * @param {PointerEvent} event pointer ThreeEvent.
+             * @event pointout - fired when a pointing device is moved out of the hit test boundaries of an element.
+             * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerout_event Element: pointerout event}
+             */
             onPointerOut={(event) => {
-                const cubeName = event.eventObject.name;
                 setColor(ncolors);
-                root.style.setProperty("--txtColor", colors[ncolors]);
-                output.innerHTML = `Hovered: ${false} <br \> name: ${cubeName}, color: ${ncolors} → ${colors[ncolors]}`;
+                setOutput("Unhovered", ncolors);
             }}
         >
             <boxGeometry args={[1, 1, 1]} />
@@ -396,52 +452,55 @@ export default function App() {
     const cs1 = useState(false);
     const cs2 = useState(false);
     return (
-        <Canvas camera={{ fov: 35, position: [0, 0, 4] }}>
-            <OrbitControls />
-            <ambientLight intensity={Math.PI / 2} />
-            <spotLight
-                position={[10, 10, 10]}
-                angle={0.15}
-                penumbra={1}
-                decay={0}
-                intensity={Math.PI}
-            />
-            <pointLight
-                position={[-10, -10, -10]}
-                decay={0}
-                intensity={Math.PI}
-            />
-            <Suspense>
-                <Bounds fit clip margin={1.2} damping={0}>
-                    <Box
-                        position={[-1.2, 0, 0]}
-                        name={"Box1"}
-                        colorState={cs1}
-                    />
-                    <Box
-                        position={[1.2, 0, 0]}
-                        name={"Box2"}
-                        colorState={cs2}
-                    />
-                    <DisplayText
-                        position={[-1.2, 1.5, 0]}
-                        txt={createText("Box 1 (Text)", cs1[0])}
-                        color={colors[cs1[0]]}
-                    />
-                    <DisplayText
-                        position={[1.2, 1.5, 0]}
-                        txt={createText("Box 2 (Text)", cs2[0])}
-                        color={colors[cs2[0]]}
-                    />
-                    <Center top center>
-                        <DisplayText3D
-                            position={[0, 0, 0]}
-                            txt={"R3F (Text3D)"}
-                            color={"#C0C0C0"}
+        <>
+            <div id="output"></div>
+            <Canvas camera={{ fov: 35, position: [0, 0, 4] }}>
+                <OrbitControls />
+                <ambientLight intensity={Math.PI / 2} />
+                <spotLight
+                    position={[10, 10, 10]}
+                    angle={0.15}
+                    penumbra={1}
+                    decay={0}
+                    intensity={Math.PI}
+                />
+                <pointLight
+                    position={[-10, -10, -10]}
+                    decay={0}
+                    intensity={Math.PI}
+                />
+                <Suspense>
+                    <Bounds fit clip margin={1.2} damping={0}>
+                        <Box
+                            position={[-1.2, 0, 0]}
+                            name={"Box1"}
+                            colorState={cs1}
                         />
-                    </Center>
-                </Bounds>
-            </Suspense>
-        </Canvas>
+                        <Box
+                            position={[1.2, 0, 0]}
+                            name={"Box2"}
+                            colorState={cs2}
+                        />
+                        <DisplayText
+                            position={[-1.2, 1.5, 0]}
+                            txt={createText("Box 1 (Text)", cs1[0])}
+                            color={colors[cs1[0]]}
+                        />
+                        <DisplayText
+                            position={[1.2, 1.5, 0]}
+                            txt={createText("Box 2 (Text)", cs2[0])}
+                            color={colors[cs2[0]]}
+                        />
+                        <Center top center>
+                            <DisplayText3D
+                                position={[0, 0, 0]}
+                                txt={"R3F (Text3D)"}
+                                color={"#C0C0C0"}
+                            />
+                        </Center>
+                    </Bounds>
+                </Suspense>
+            </Canvas>
+        </>
     );
 }

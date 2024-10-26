@@ -68,7 +68,9 @@
  * @author Paulo Roma
  * @since 10/10/2024
  * @see <a href="../src/App.jsx">source</a>
+ * @see {@link https://krotalias.github.io/cubes-app-git/doc-cubes-vite/index.html source2}
  * @see <a href="https://cubes-app.vercel.app/">link</a>
+ * @see {@link https://krotalias.github.io/cubes-app-git/ link2}
  * @see {@link https://codesandbox.io/p/sandbox/sfypdx original code}
  * @see <img src="../cubes.png" width="340">
  */
@@ -205,9 +207,9 @@ function Box({ colorState, position, name } = props) {
      */
     const output = document.querySelector("#output");
     const [pmndrsImg, reactImg, threeImg] = useTexture([
-        "/pmndrs.png",
-        "/react.png",
-        "/three.png",
+        "./pmndrs.png",
+        "./react.png",
+        "./three.png",
     ]);
 
     /**

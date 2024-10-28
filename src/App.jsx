@@ -57,11 +57,20 @@
  *     {@link https://nodejs.org/en/blog/release/v18.19.0 18} or
  *     {@link https://nodejs.org/en/blog/release/v20.10.0 20}:</li>
  *  <ul>
- *    <li>cd cubes</li>
+ *    <li>cd cubes-app</li>
  *    <li>{@link https://www.npmjs.com npm} or {@link https://yarnpkg.com yarn} install</li>
  *    <li>{@link https://www.npmjs.com npm} run dev -- --host (for using vite) <br> or
  *        {@link https://www.npmjs.com npm} start <br> or
  *        {@link https://yarnpkg.com/package/react yarn} start</li>
+ *  </ul>
+ *  <li>To use vercel {@link https://vercel.com/docs/cli cli} to run
+ *  vercel {@link https://vercel.com/docs/cli/dev dev} before deploying:</li>
+ *  <ul>
+ *    <li>cd cubes-app</li>
+ *    <li>{@link https://pnpm.io pnpm} i -g vercel or
+ *        {@link https://pnpm.io pnpm} i -g vercel@latest (to update to the latest version)</li>
+ *    <li>{@link https://www.npmjs.com npm} or {@link https://yarnpkg.com yarn} install</li>
+ *    <li>{@link https://vercel.com vercel} dev</li>
  *  </ul>
  * </ul>
  *
@@ -72,7 +81,7 @@
  * @see <a href="https://cubes-app.vercel.app/">link</a>
  * @see {@link https://krotalias.github.io/cubes-app-git/ link2}
  * @see {@link https://codesandbox.io/p/sandbox/sfypdx original code}
- * @see <img src="../cubes.png" width="340">
+ * @see <iframe title="Cubes" src="https://cubes-app.vercel.app/" style="position: relative; right: 40px; margin-bottom: 0px; transform: scale(0.85); width: 380px; height: 380px"></iframe>
  */
 
 import { useRef, useState, useEffect, Suspense } from "react";
@@ -130,6 +139,8 @@ import "./index.css";
  * @see {@link https://byteofdev.com/posts/how-to-use-esm/ How to use ESM}
  * @see {@link https://www.youtube.com/watch?v=DPl34H2ISsk I wish I knew this before using React Three Fiber}
  * @see {@link https://r3f.docs.pmnd.rs/tutorials/how-it-works How does it work?}
+ * @see {@link https://dev.to/studio_hungry/notes-on-react-three-fiber-4f8g Notes on react-three-fiber}
+ * @see {@link https://codyb.co/articles/a-technical-breakdown-of-react-three-fiber A technical breakdown of react-three-fiber}
  */
 
 /**

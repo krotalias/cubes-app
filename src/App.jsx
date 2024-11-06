@@ -80,6 +80,7 @@
  * @see {@link https://krotalias.github.io/cubes-app-git/doc-cubes-vite/index.html source2}
  * @see <a href="https://cubes-app.vercel.app/">link</a>
  * @see {@link https://krotalias.github.io/cubes-app-git/ link2}
+ * @see <a href="../package.json">package.json</a>
  * @see {@link https://codesandbox.io/p/sandbox/sfypdx original code}
  * @see <iframe title="Cubes" src="https://cubes-app.vercel.app/" style="position: relative; right: 40px; margin-bottom: 0px; transform: scale(0.85); width: 380px; height: 380px"></iframe>
  */
@@ -87,14 +88,14 @@
 import { useRef, useState, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
-    Bounds,
-    OrbitControls,
-    Text,
-    Text3D,
-    useMatcapTexture,
-    Center,
-    useTexture,
-    Decal,
+  Bounds,
+  OrbitControls,
+  Text,
+  Text3D,
+  useMatcapTexture,
+  Center,
+  useTexture,
+  Decal,
 } from "@react-three/drei";
 import "./index.css";
 
@@ -108,7 +109,7 @@ import "./index.css";
 
 /**
  * <p>React</p>
- * The library for web and native user interfaces
+ * The library for web and native user interfaces.
  * @external react
  * @see {@link https://react.dev/ React Top-Level API}
  * @see {@link https://react.dev/reference/react/Suspense Suspense}
@@ -169,14 +170,14 @@ import "./index.css";
  * @type {Object<Number, String>}
  */
 const colors = {
-    0: "red",
-    2: "green",
-    4: "blue",
-    1: "cyan",
-    3: "magenta",
-    5: "yellow",
-    6: "orange",
-    7: "hotpink",
+  0: "red",
+  2: "green",
+  4: "blue",
+  1: "cyan",
+  3: "magenta",
+  5: "yellow",
+  6: "orange",
+  7: "hotpink",
 };
 
 /**
@@ -194,173 +195,193 @@ const ncolors = Object.keys(colors).length - 2;
  * @returns {ThreeElements} view as regular three.js elements expressed in JSX.
  */
 function Box({ colorState, position, name } = props) {
-    /**
-     * This reference will give us direct access to a Box mesh.
-     * @type {React.MutableRefObjec}
-     * @global
-     */
-    const meshRef = useRef();
+  /**
+   * This reference will give us direct access to a Box mesh.
+   * @type {React.MutableRefObjec}
+   * @global
+   */
+  const meshRef = useRef();
 
-    const [color, setColor] = colorState;
+  const [color, setColor] = colorState;
 
-    /**
-     * Set up the clicked and active states.
-     * States are pairs with an stateful value,
-     * and a function to update it.
-     */
-    const [clicked, setClick] = useState(false);
-    const [active, setActive] = useState(false);
-    const root = document.querySelector(":root");
-    /**
-     * Element identified by "#output".
-     * @type {Element}
-     * @global
-     */
-    const output = document.querySelector("#output");
-    const [pmndrsImg, reactImg, threeImg] = useTexture([
-        "./pmndrs.png",
-        "./react.png",
-        "./three.png",
-    ]);
+  /**
+   * Set up the clicked and active states.
+   * States are pairs with an stateful value,
+   * and a function to update it.
+   */
+  const [clicked, setClick] = useState(false);
+  const [active, setActive] = useState(false);
+  const root = document.querySelector(":root");
+  /**
+   * Element identified by "#output".
+   * @type {Element}
+   * @global
+   */
+  const output = document.querySelector("#output");
+  const [pmndrsImg, reactImg, threeImg] = useTexture([
+    "./pmndrs.png",
+    "./react.png",
+    "./three.png",
+  ]);
 
-    /**
-     * Returns the next color index (key) in the range [0, {@link ncolors}] from the {@link colors color Object}.
-     * @global
-     * @param {Number} c color index.
-     * @returns {Number} next color index.
-     */
-    const nextColor = (c) => (c >= ncolors ? 0 : (1 + c) % ncolors);
+  /**
+   * Returns the next color index (key) in the range [0, {@link ncolors}] from the {@link colors color Object}.
+   * @global
+   * @param {Number} c color index.
+   * @returns {Number} next color index.
+   */
+  const nextColor = (c) => (c >= ncolors ? 0 : (1 + c) % ncolors);
 
-    // Subscribe this component to the render-loop, to rotate the mesh in each frame.
-    useFrame((state, delta) => (meshRef.current.rotation.x += delta));
+  /**
+   * This hook gives you access to the state model which contains
+   * the default renderer, the scene, your camera, and so on.
+   * It also gives you the current size of the canvas in screen and viewport coordinates.
+   * @function useThree
+   * @memberof external:react-three/fiber
+   */
 
-    /**
-     * Sets the {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
-     * and {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style style.color}
-     * properties of the Element {@link output}.
-     * @global
-     * @param {String} txt output setter id.
-     * @param {Number} cor color index.
-     */
-    const setOutput = (txt, cor) => {
-        if (output) {
-            output.style.color = colors[cor];
-            output.innerHTML = `${txt}<br /> name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`;
-        }
-    };
+  /**
+   * <p>Subscribe this component to the render-loop, to rotate the mesh in each frame.</p>
+   * This hook allows you to execute code on every rendered frame,
+   * like running effects, updating controls, and so on.
+   * You receive the state (same as useThree) and a clock delta.
+   * Your callback function will be invoked just before a frame is rendered.
+   * When the component unmounts it is unsubscribed automatically from the render-loop.
+   * @function useFrame
+   * @memberof external:react-three/fiber
+   */
+  useFrame((state, delta) => (meshRef.current.rotation.x += delta));
 
-    /**
-     * <p>React {@link https://react.dev/reference/react/useState useState}
-     * hook is asynchronous!</p>
-     * <p>Basically, you don't get update value right after updating state.</p>
-     *
-     * The {@link https://react.dev/reference/react/useEffect useEffect}
-     * hook executes after the function returns
-     * the generated component instance within it,
-     * which means that any ref or state will be assigned before
-     * the useEffect hook gets called.
-     *
-     * <p>This code will always use the latest value of clicked,
-     * which will be used in the next draw.</p>
-     *
-     * @function useEffect
-     * @memberof external:react
-     *
-     * @see {@link https://making.close.com/posts/state-management-with-async-functions The Pitfalls of useState with Asynchronous Functions in React}
-     * @see {@link https://dev.to/shareef/react-usestate-hook-is-asynchronous-1hia React useState hook is asynchronous!}
-     */
-    useEffect(() => {
-        const cor = color === false ? ncolors : nextColor(color);
-        setColor(cor);
-        setOutput("useEffect", cor);
-        console.log(
-            `useEffect: clicked ${clicked}, name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`,
-        );
-    }, [clicked]);
+  /**
+   * Sets the {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+   * and {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/style style.color}
+   * properties of the Element {@link output}.
+   * @global
+   * @param {String} txt output setter id.
+   * @param {Number} cor color index.
+   */
+  const setOutput = (txt, cor) => {
+    if (output) {
+      output.style.color = colors[cor];
+      output.innerHTML = `${txt}<br /> name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`;
+    }
+  };
 
-    return (
-        <mesh
-            position={position}
-            name={name}
-            ref={meshRef}
-            scale={active ? 1.5 : 1}
-            /**
-             * Gets the picked (clicked) object (Box) and sets its color.
-             * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
-             * property of the Element {@link output} is also updated.
-             * @param {PointerEvent} event pointer ThreeEvent.
-             * @event click - fires after both the mousedown and mouseup events have fired in that order.
-             * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event Element: click event}
-             */
-            onClick={(event) => {
-                const cubeName = event.eventObject.name;
-                event.stopPropagation();
-                setActive(!active);
-                // either way does work
-                if (cubeName.includes("1")) {
-                    setClick(!clicked);
-                } else {
-                    // functional update
-                    setColor((prevColor) => nextColor(prevColor));
-                    const cor = nextColor(color);
-                    setOutput("functional update", cor);
-                }
-            }}
-            /**
-             * Gets the hovered object (Box) and sets its color.
-             * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
-             * property of the Element {@link output} is also updated.
-             * @param {PointerEvent} event pointer ThreeEvent.
-             * @event pointover - fired when a pointing device is moved into an element's hit test boundaries.
-             * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerover_event Element: pointerover event}
-             */
-            onPointerOver={(event) => {
-                setColor(ncolors + 1);
-                setOutput("Hovered", ncolors + 1);
-            }}
-            /**
-             * Gets the unhovered object (Box) and sets its color.
-             * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
-             * property of the Element {@link output} is also updated.
-             * @param {PointerEvent} event pointer ThreeEvent.
-             * @event pointout - fired when a pointing device is moved out of the hit test boundaries of an element.
-             * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerout_event Element: pointerout event}
-             */
-            onPointerOut={(event) => {
-                setColor(ncolors);
-                setOutput("Unhovered", ncolors);
-            }}
-        >
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color={colors[color]} />
-            <Decal position={[0.5, 0, 0]} scale={0.75} map={reactImg} />
-            <Decal position={[-0.5, 0, 0]} scale={0.75} map={reactImg} />
-            <Decal
-                position={[0, 0.5, 0]}
-                rotation={[Math.PI / 3, 0, 0]}
-                scale={0.75}
-                map={threeImg}
-            />
-            <Decal
-                position={[0, -0.5, 0]}
-                rotation={[Math.PI / 3, 0, 0]}
-                scale={0.75}
-                map={threeImg}
-            />
-            <Decal
-                position={[0, 0, 0.5]}
-                rotation={[0, 0, 0]}
-                scale={0.85}
-                map={pmndrsImg}
-            />
-            <Decal
-                position={[0, 0, -0.5]}
-                rotation={[0, 0, -Math.PI / 2]}
-                scale={0.85}
-                map={pmndrsImg}
-            />
-        </mesh>
+  /**
+   * <p>React {@link https://react.dev/reference/react/useState useState}
+   * hook is asynchronous!</p>
+   * <p>Basically, you don't get update value right after updating state.</p>
+   *
+   * The {@link https://react.dev/reference/react/useEffect useEffect}
+   * hook executes after the function returns
+   * the generated component instance within it,
+   * which means that any ref or state will be assigned before
+   * the useEffect hook gets called.
+   *
+   * <p>This code will always use the latest value of clicked,
+   * which will be used in the next draw.</p>
+   *
+   * @function useEffect
+   * @memberof external:react
+   *
+   * @see {@link https://making.close.com/posts/state-management-with-async-functions The Pitfalls of useState with Asynchronous Functions in React}
+   * @see {@link https://dev.to/shareef/react-usestate-hook-is-asynchronous-1hia React useState hook is asynchronous!}
+   */
+  useEffect(() => {
+    const cor = color === false ? ncolors : nextColor(color);
+    setColor(cor);
+    setOutput("useEffect", cor);
+    console.log(
+      `useEffect: clicked ${clicked}, name: ${meshRef.current.name}, color: ${cor} → ${colors[cor]}`,
     );
+  }, [clicked]);
+
+  return (
+    <mesh
+      position={position}
+      name={name}
+      ref={meshRef}
+      scale={active ? 1.5 : 1}
+      /**
+       * Gets the picked (clicked) object (Box) and sets its color.
+       * <p>Fires after both the mousedown and mouseup events have fired in that order.</p>
+       * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+       * property of the Element {@link output} is also updated.
+       * @param {PointerEvent} event pointer ThreeEvent.
+       * @event click
+       * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event Element: click event}
+       */
+      onClick={(event) => {
+        const cubeName = event.eventObject.name;
+        event.stopPropagation();
+        setActive(!active);
+        // either way does work
+        if (cubeName.includes("1")) {
+          setClick(!clicked);
+        } else {
+          // functional update
+          setColor((prevColor) => nextColor(prevColor));
+          const cor = nextColor(color);
+          setOutput("functional update", cor);
+        }
+      }}
+      /**
+       * Gets the hovered object (Box) and sets its color.
+       * <p>Fired when a pointing device is moved into an element's hit test boundaries.</p>
+       * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+       * property of the Element {@link output} is also updated.
+       * @param {PointerEvent} event pointer ThreeEvent.
+       * @event pointover
+       * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerover_event Element: pointerover event}
+       */
+      onPointerOver={(event) => {
+        setColor(ncolors + 1);
+        setOutput("Hovered", ncolors + 1);
+      }}
+      /**
+       * Gets the unhovered object (Box) and sets its color.
+       * <p>Fired when a pointing device is moved out of the hit test boundaries of an element.</p>
+       * The {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML innerHTML}
+       * property of the Element {@link output} is also updated.
+       * @param {PointerEvent} event pointer ThreeEvent.
+       * @event pointout
+       * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Element/pointerout_event Element: pointerout event}
+       */
+      onPointerOut={(event) => {
+        setColor(ncolors);
+        setOutput("Unhovered", ncolors);
+      }}
+    >
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={colors[color]} />
+      <Decal position={[0.5, 0, 0]} scale={0.75} map={reactImg} />
+      <Decal position={[-0.5, 0, 0]} scale={0.75} map={reactImg} />
+      <Decal
+        position={[0, 0.5, 0]}
+        rotation={[Math.PI / 3, 0, 0]}
+        scale={0.75}
+        map={threeImg}
+      />
+      <Decal
+        position={[0, -0.5, 0]}
+        rotation={[Math.PI / 3, 0, 0]}
+        scale={0.75}
+        map={threeImg}
+      />
+      <Decal
+        position={[0, 0, 0.5]}
+        rotation={[0, 0, 0]}
+        scale={0.85}
+        map={pmndrsImg}
+      />
+      <Decal
+        position={[0, 0, -0.5]}
+        rotation={[0, 0, -Math.PI / 2]}
+        scale={0.85}
+        map={pmndrsImg}
+      />
+    </mesh>
+  );
 }
 
 /**
@@ -374,12 +395,12 @@ function Box({ colorState, position, name } = props) {
  * @returns {String} composed text.
  */
 function createText(txt, color) {
-    const arrow = txt.includes("3D") ? "-->" : "→";
-    const cor = colors[color];
-    const str = `${color} ${arrow} ${cor}`;
-    const len = Math.abs(7 + str.length - txt.length);
+  const arrow = txt.includes("3D") ? "-->" : "→";
+  const cor = colors[color];
+  const str = `${color} ${arrow} ${cor}`;
+  const len = Math.abs(7 + str.length - txt.length);
 
-    return `${" ".repeat(len) + txt}\ncolor: ${str}`;
+  return `${" ".repeat(len) + txt}\ncolor: ${str}`;
 }
 
 /**
@@ -392,35 +413,35 @@ function createText(txt, color) {
  * @see {@link https://codesandbox.io/p/sandbox/r3f-drei-3d-text-de86ih?file=%2Fsrc%2FApp.js%3A35%2C15-35%2C27 3f-drei-3d-text}
  */
 function DisplayText3D({ position, txt, color } = props) {
-    const { viewport } = useThree();
+  const { viewport } = useThree();
 
-    const w = viewport.width;
-    const h = viewport.height;
-    const d = Math.min(w, h);
-    const fsize = Math.max(d / 30, 0.08);
+  const w = viewport.width;
+  const h = viewport.height;
+  const d = Math.min(w, h);
+  const fsize = Math.max(d / 30, 0.08);
 
-    // const [matcapTexture] = useMatcapTexture("CB4E88_F99AD6_F384C3_ED75B9");
-    // <meshMatcapMaterial color={cor} matcap={matcapTexture} />
-    return (
-        <Text3D
-            position={position}
-            scale={[1, 1, 0.1]}
-            size={fsize}
-            maxWidth={[w / 5, h * 2, 1]}
-            font={"./helvetiker_regular.typeface.json"}
-            curveSegments={24}
-            bevelEnabled
-            bevelSegments={1}
-            bevelSize={0.005}
-            bevelThickness={0.03}
-            height={0.5}
-            lineHeight={1.9}
-            letterSpacing={0.02}
-        >
-            {txt}
-            <meshStandardMaterial color={color} />
-        </Text3D>
-    );
+  // const [matcapTexture] = useMatcapTexture("CB4E88_F99AD6_F384C3_ED75B9");
+  // <meshMatcapMaterial color={cor} matcap={matcapTexture} />
+  return (
+    <Text3D
+      position={position}
+      scale={[1, 1, 0.1]}
+      size={fsize}
+      maxWidth={[w / 5, h * 2, 1]}
+      font={"./helvetiker_regular.typeface.json"}
+      curveSegments={24}
+      bevelEnabled
+      bevelSegments={1}
+      bevelSize={0.005}
+      bevelThickness={0.03}
+      height={0.5}
+      lineHeight={1.9}
+      letterSpacing={0.02}
+    >
+      {txt}
+      <meshStandardMaterial color={color} />
+    </Text3D>
+  );
 }
 
 /**
@@ -432,21 +453,21 @@ function DisplayText3D({ position, txt, color } = props) {
  * @returns {ThreeElements} view as regular three.js elements expressed in JSX.
  */
 function DisplayText({ position, txt, color } = props) {
-    const { viewport } = useThree();
-    const d = Math.min(viewport.width, viewport.height);
-    const fsize = Math.max(d / 15, 0.18);
+  const { viewport } = useThree();
+  const d = Math.min(viewport.width, viewport.height);
+  const fsize = Math.max(d / 15, 0.18);
 
-    return (
-        <Text
-            position={position}
-            fontSize={fsize}
-            color={color}
-            anchorX="center"
-            anchorY="middle"
-        >
-            {txt}
-        </Text>
-    );
+  return (
+    <Text
+      position={position}
+      fontSize={fsize}
+      color={color}
+      anchorX="center"
+      anchorY="middle"
+    >
+      {txt}
+    </Text>
+  );
 }
 
 /**
@@ -462,58 +483,46 @@ function DisplayText({ position, txt, color } = props) {
  * @returns {HTMLCanvasElement} R3F {@link external:react-three/fiber Canvas}.
  */
 export default function App() {
-    const cs1 = useState(false);
-    const cs2 = useState(false);
-    return (
-        <>
-            <div id="output"></div>
-            <Canvas camera={{ fov: 35, position: [0, 0, 4] }}>
-                <OrbitControls />
-                <ambientLight intensity={Math.PI / 2} />
-                <spotLight
-                    position={[10, 10, 10]}
-                    angle={0.15}
-                    penumbra={1}
-                    decay={0}
-                    intensity={Math.PI}
-                />
-                <pointLight
-                    position={[-10, -10, -10]}
-                    decay={0}
-                    intensity={Math.PI}
-                />
-                <Suspense>
-                    <Bounds fit clip margin={1.2} damping={0}>
-                        <Box
-                            position={[-1.2, 0, 0]}
-                            name={"Box1"}
-                            colorState={cs1}
-                        />
-                        <Box
-                            position={[1.2, 0, 0]}
-                            name={"Box2"}
-                            colorState={cs2}
-                        />
-                        <DisplayText
-                            position={[-1.2, 1.5, 0]}
-                            txt={createText("Box 1 (Text)", cs1[0])}
-                            color={colors[cs1[0]]}
-                        />
-                        <DisplayText
-                            position={[1.2, 1.5, 0]}
-                            txt={createText("Box 2 (Text)", cs2[0])}
-                            color={colors[cs2[0]]}
-                        />
-                        <Center top center>
-                            <DisplayText3D
-                                position={[0, 0, 0]}
-                                txt={"R3F (Text3D)"}
-                                color={"#C0C0C0"}
-                            />
-                        </Center>
-                    </Bounds>
-                </Suspense>
-            </Canvas>
-        </>
-    );
+  const cs1 = useState(false);
+  const cs2 = useState(false);
+  return (
+    <>
+      <div id="output"></div>
+      <Canvas camera={{ fov: 35, position: [0, 0, 4] }}>
+        <OrbitControls />
+        <ambientLight intensity={Math.PI / 2} />
+        <spotLight
+          position={[10, 10, 10]}
+          angle={0.15}
+          penumbra={1}
+          decay={0}
+          intensity={Math.PI}
+        />
+        <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
+        <Suspense>
+          <Bounds fit clip margin={1.2} damping={0}>
+            <Box position={[-1.2, 0, 0]} name={"Box1"} colorState={cs1} />
+            <Box position={[1.2, 0, 0]} name={"Box2"} colorState={cs2} />
+            <DisplayText
+              position={[-1.2, 1.5, 0]}
+              txt={createText("Box 1 (Text)", cs1[0])}
+              color={colors[cs1[0]]}
+            />
+            <DisplayText
+              position={[1.2, 1.5, 0]}
+              txt={createText("Box 2 (Text)", cs2[0])}
+              color={colors[cs2[0]]}
+            />
+            <Center top center>
+              <DisplayText3D
+                position={[0, 0, 0]}
+                txt={"R3F (Text3D)"}
+                color={"#C0C0C0"}
+              />
+            </Center>
+          </Bounds>
+        </Suspense>
+      </Canvas>
+    </>
+  );
 }

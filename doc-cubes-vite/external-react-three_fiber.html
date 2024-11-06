@@ -75,7 +75,7 @@ are readily interactive and can participate in React's ecosystem.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="App.jsx.html">App.jsx</a>, <a href="App.jsx.html#line129">line 129</a>
+        <a href="App.jsx.html">App.jsx</a>, <a href="App.jsx.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -129,6 +129,193 @@ are readily interactive and can participate in React's ecosystem.</div>
     
 
     
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".useFrame"><span class="type-signature">(static) </span>useFrame<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Subscribe this component to the render-loop, to rotate the mesh in each frame.</p>
+This hook allows you to execute code on every rendered frame,
+like running effects, updating controls, and so on.
+You receive the state (same as useThree) and a clock delta.
+Your callback function will be invoked just before a frame is rendered.
+When the component unmounts it is unsubscribed automatically from the render-loop.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="App.jsx.html">App.jsx</a>, <a href="App.jsx.html#line243">line 243</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".useThree"><span class="type-signature">(static) </span>useThree<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    This hook gives you access to the state model which contains
+the default renderer, the scene, your camera, and so on.
+It also gives you the current size of the canvas in screen and viewport coordinates.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="App.jsx.html">App.jsx</a>, <a href="App.jsx.html#line235">line 235</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
 
     
 
@@ -143,13 +330,13 @@ are readily interactive and can participate in React's ecosystem.</div>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li><li><a href="external-react.html">react</a></li><li><a href="external-react-dom.html">react-dom</a></li><li><a href="external-react-dom_client.html">react-dom/client</a></li><li><a href="external-react-three_drei.html">react-three/drei</a></li><li><a href="external-react-three_fiber.html">react-three/fiber</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:click-firesafterboththemousedownandmouseupeventshavefiredinthatorder.">click - fires after both the mousedown and mouseup events have fired in that order.</a></li><li><a href="global.html#event:pointout-firedwhenapointingdeviceismovedoutofthehittestboundariesofanelement.">pointout - fired when a pointing device is moved out of the hit test boundaries of an element.</a></li><li><a href="global.html#event:pointover-firedwhenapointingdeviceismovedintoanelement'shittestboundaries.">pointover - fired when a pointing device is moved into an element's hit test boundaries.</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Box">Box</a></li><li><a href="global.html#DisplayText">DisplayText</a></li><li><a href="global.html#DisplayText3D">DisplayText3D</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#createText">createText</a></li><li><a href="global.html#meshRef">meshRef</a></li><li><a href="global.html#ncolors">ncolors</a></li><li><a href="global.html#nextColor">nextColor</a></li><li><a href="global.html#output">output</a></li><li><a href="global.html#setOutput">setOutput</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Externals</h3><ul><li><a href="external-THREE.html">THREE</a></li><li><a href="external-react.html">react</a></li><li><a href="external-react-dom.html">react-dom</a></li><li><a href="external-react-dom_client.html">react-dom/client</a></li><li><a href="external-react-three_drei.html">react-three/drei</a></li><li><a href="external-react-three_fiber.html">react-three/fiber</a></li></ul><h3>Events</h3><ul><li><a href="global.html#event:click">click</a></li><li><a href="global.html#event:pointout">pointout</a></li><li><a href="global.html#event:pointover">pointover</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Box">Box</a></li><li><a href="global.html#DisplayText">DisplayText</a></li><li><a href="global.html#DisplayText3D">DisplayText3D</a></li><li><a href="global.html#colors">colors</a></li><li><a href="global.html#createText">createText</a></li><li><a href="global.html#meshRef">meshRef</a></li><li><a href="global.html#ncolors">ncolors</a></li><li><a href="global.html#nextColor">nextColor</a></li><li><a href="global.html#output">output</a></li><li><a href="global.html#setOutput">setOutput</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Oct 28 2024 10:09:21 GMT-0300 (Brasilia Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Nov 06 2024 05:06:54 GMT-0300 (Brasilia Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
